@@ -1,0 +1,733 @@
+import maya.cmds as mc
+
+#_Format_____________________________________________________________________________
+FORMAT  = '{side}_{info}_{type}_{num}'
+TAGS    = tuple(i_SHORT for i in FORMAT._formatter_parser())
+TAG_NUM = len(TAGS)
+
+#_Sides______________________________________________________________________________
+LEFT = 'left'
+LEFT_SHORT = 'l'
+
+RIGHT = 'right'
+RIGHT_SHORT = 'r'
+
+CENTER = 'center'
+CENTER_SHORT = 'c'
+
+SIDES = {
+    LEFT : LEFT_SHORT,
+    RIGHT : RIGHT_SHORT,
+    CENTER : CENTER_SHORT,
+}
+
+#_Default_Nodes______________________________________________________________________
+DEFAULTS = tuple(mc.ls(defaultNodes=True))
+
+
+#_Other_Types________________________________________________________________________
+TRANSFORM = 'transform'
+TRANSFORM_SHORT ='grp'
+
+ZERO = 'zero'
+ZERO_SHORT ='zro'
+
+NULL = 'null'
+NULL_SHORT ='nll'
+
+OFFSET = 'offset'
+OFFSET_SHORT ='off'
+
+LOCATOR = 'locator'
+LOCATOR_SHORT ='loc'
+
+MESH = 'mesh'
+MESH_SHORT ='geo'
+
+POLY_SPHERE = 'polySphere'
+POLY_SPHERE_SHORT ='plys'
+
+NURBS_CURVE = 'nurbsCurve'
+NURBS_CURVE_SHORT ='crv'
+
+NURBS_SURFACE = 'nurbsSurface'
+NURBS_SURFACE_SHORT ='nrbs'
+
+JOINT = 'joint'
+JOINT_SHORT ='jnt'
+
+IK_EFFECTOR = 'ikEffector'
+IK_EFFECTOR_SHORT ='ikf'
+
+IK_HANDLE = 'ikHandle'
+IK_HANDLE_SHORT ='ikh'
+
+FOLLICLE = 'follicle'
+FOLLICLE_SHORT ='fll'
+
+DISPLAY_LAYER = 'displayLayer'
+DISPLAY_LAYER_SHORT ='lyr'
+
+#_Deform_Types_______________________________________________________________________
+BLENDSHAPE = 'blendShape'
+BLENDSHAPE_SHORT = 'bs'
+
+CLUSTER = 'cluster'
+CLUSTER_SHORT = 'cls'
+
+CURVE_WRAP = 'curveWarp'
+CURVE_WRAP_SHORT = 'crvw'
+
+DELTAMUSH = 'deltaMush'
+DELTAMUSH_SHORT = 'dltm'
+
+LATTICE = 'lattice'
+LATTICE_SHORT = 'lat'
+
+SHRINK_WRAP = 'shrinkWrap'
+SHRINK_WRAP_SHORT = 'sw'
+
+SKIN_CLUSTER = 'skinCluster'
+SKIN_CLUSTER_SHORT = 'sc'
+
+TENSION = 'tension'
+TENSION_SHORT = 'ts'
+
+WIRE = 'wire'
+WIRE_SHORT = 'wr'
+
+WRAP = 'wrap'
+WRAP_SHORT = 'wrp'
+
+#_Surface_Types______________________________________________________________________
+ANISOTROPIC = 'anisotropic'
+ANISOTROPIC_SHORT = 'ani'
+
+BIFROST_LIQUID_MATERIAL = 'bifrostLiquidMaterial'
+BIFROST_LIQUID_MATERIAL_SHORT = 'blm'
+
+BLINN = 'blinn'
+BLINN_SHORT = 'bln'
+
+HAIR_PHYSICAL_SHADER = 'hairPhysicalShader'
+HAIR_PHYSICAL_SHADER_SHORT = 'hps'
+
+HAIR_TUBE_SHADER = 'hairTubeShader'
+HAIR_TUBE_SHADER_SHORT = 'hts'
+
+LAMBERT = 'lambert'
+LAMBERT_SHORT = 'lmb'
+
+LAYERED_SHADER = 'layeredShader'
+LAYERED_SHADER_SHORT = 'lyrs'
+
+OCEAN_SHADER = 'oceanShader'
+OCEAN_SHADER_SHORT = 'ocns'
+
+PHONG = 'phong'
+PHONG_SHORT = 'phg'
+
+PHONG_E = 'phongE'
+PHONG_E_SHORT = 'phge'
+
+RAMP_SHADER = 'rampShader'
+RAMP_SHADER_SHORT = 'rmps'
+
+SHADING_MAP = 'shadingMap'
+SHADING_MAP_SHORT = 'sm'
+
+SURFACE_SHADER = 'surfaceShader'
+SURFACE_SHADER_SHORT = 'ss'
+
+USE_BACKGROUND = 'useBackground'
+USE_BACKGROUND_SHORT = 'ubg'
+
+#_Volumetric_Types___________________________________________________________________
+ENV_FOG = 'envFog'
+ENV_FOG_SHORT = 'ef'
+
+FLUID_SHAPE = 'fluidShape'
+FLUID_SHAPE_SHORT = 'fs'
+
+LIGHT_FOG = 'lightFog'
+LIGHT_FOG_SHORT = 'lf'
+
+PARTICLE_CLOUD = 'particleCloud'
+PARTICLE_CLOUD_SHORT = 'pc'
+
+VOLUME_FOG = 'volumeFog'
+VOLUME_FOG_SHORT = 'vf'
+
+VOLUME_SHADER = 'volumeShader'
+VOLUME_SHADER_SHORT = 'vs'
+
+#_Displacement_Types_________________________________________________________________
+C_MUSCLE_SHADER = 'cMuscleShader'
+C_MUSCLE_SHADER_SHORT = 'cms'
+
+DISPLACEMENT_SHADER = 'displacementShader'
+DISPLACEMENT_SHADER_SHORT = 'ds'
+
+#_2D_Textures_Types__________________________________________________________________
+BULGE = 'bulge'
+BULGE_SHORT = 'blg'
+
+CHECKER = 'checker'
+CHECKER_SHORT = 'chkr'
+
+CLOTH = 'cloth'
+CLOTH_SHORT = 'clt'
+
+FILE = 'file'
+FILE_SHORT = 'file'
+
+FLUID_TEXTURE_2D = 'fluidTexture2D'
+FLUID_TEXTURE_2D_SHORT = 'ft2d'
+
+FRACTAL = 'fractal'
+FRACTAL_SHORT = 'frtl'
+
+GRID = 'grid'
+GRID_SHORT = 'grd'
+
+MANDELBROT = 'mandelbrot'
+MANDELBROT_SHORT = 'mdb'
+
+MONTAIN = 'mountain'
+MONTAIN_SHORT = 'mtn'
+
+MOVIE = 'movie'
+MOVIE_SHORT = 'mov'
+
+NOISE = 'noise'
+NOISE_SHORT = 'nos'
+
+OCEAN = 'ocean'
+OCEAN_SHORT = 'ocn'
+
+PSD_FILE_TEX = 'psdFileTex'
+PSD_FILE_TEX_SHORT = 'pft'
+
+RAMP = 'ramp'
+RAMP_SHORT = 'rmp'
+
+SIMPLEX_NOISE = 'simplexNoise'
+SIMPLEX_NOISE_SHORT = 'sm'
+
+SUBSTANCE = 'substance'
+SUBSTANCE_SHORT = 'sub'
+
+SUBSTANCE_OUTPUT = 'substanceOutput'
+SUBSTANCE_OUTPUT_SHORT = 'subo'
+
+WATER = 'water'
+WATER_SHORT = 'wtr'
+
+#_3D_Textures_Types__________________________________________________________________
+BROWNIAN = 'brownian'
+BROWNIAN_SHORT = 'bwn'
+
+CLOUD = 'cloud'
+CLOUD_SHORT = 'cld'
+
+CRATER = 'crater'
+CRATER_SHORT = 'crtr'
+
+FLUID_TEXTURE_3D = 'fluidTexture3D'
+FLUID_TEXTURE_3D_SHORT = 'ft3d'
+
+GRANITE = 'granite'
+GRANITE_SHORT = 'grn'
+
+LEATHER = 'leather'
+LEATHER_SHORT = 'ltr'
+
+MANDELBROT_3D = 'mandelbrot3D'
+MANDELBROT_3D_SHORT = 'm3d'
+
+MARBLE = 'marble'
+MARBLE_SHORT = 'mrbl'
+
+ROCK = 'rock'
+ROCK_SHORT = 'rck'
+
+SNOW = 'snow'
+SNOW_SHORT = 'snw'
+
+SOLID_FRACTAL = 'solidFractal'
+SOLID_FRACTAL_SHORT = 'sfrtl'
+
+STUCCO = 'stucco'
+STUCCO_SHORT = 'sto'
+
+VOLUME_NOISE = 'volumeNoise'
+VOLUME_NOISE_SHORT = 'vn'
+
+WOOD = 'wood'
+WOOD_SHORT = 'wd'
+
+#_Env_Texture_Types__________________________________________________________________
+ENV_BALL = 'envBall'
+ENV_BALL_SHORT = 'eb'
+
+ENV_CHROME = 'envChrome'
+ENV_CHROME_SHORT = 'ecrm'
+
+ENV_CUBE = 'envCube'
+ENV_CUBE_SHORT = 'ecub'
+
+ENV_SKY = 'envSky'
+ENV_SKY_SHORT = 'esk'
+
+ENV_SPHERE = 'envSphere'
+ENV_SPHERE_SHORT = 'eSph'
+
+#_lights_Types_______________________________________________________________________
+EMBIENT_LIGHT = 'ambientLight'
+EMBIENT_LIGHT_SHORT 'ambl'
+
+AREA_LIGHT = 'areaLight'
+AREA_LIGHT_SHORT 'arl'
+
+DIRECTIONAL_LIGHT = 'directionalLight'
+DIRECTIONAL_LIGHT_SHORT 'dirl'
+
+POINT_LIGHT = 'pointLight'
+POINT_LIGHT_SHORT 'pl'
+
+SPOT_LIGHT = 'spotLight'
+SPOT_LIGHT_SHORT 'sl'
+
+VOLUME_LIGHT = 'volumeLight'
+VOLUME_LIGHT_SHORT 'vl'
+
+#_Utilities_Types____________________________________________________________________
+ADD_DOUBLE_LINEAR = 'addDoubleLinear'
+ADD_DOUBLE_LINEAR_SHORT = 'adl'
+
+ADD_MATRIX = 'addMatrix'
+ADD_MATRIX_SHORT = 'am'
+
+BLENT_TWO_ATTR = 'blendTwoAttr'
+BLENT_TWO_ATTR_SHORT = 'bta'
+
+BUMP_3D = 'bump3d'
+BUMP_3D_SHORT = 'b3d'
+
+BUMP_2D = 'bump2d'
+BUMP_2D_SHORT = 'b2d'
+
+ANGLE_BETWEEN = 'angleBetween'
+ANGLE_BETWEEN_SHORT = 'ab'
+
+ARRAY_MAPPER = 'arrayMapper'
+ARRAY_MAPPER_SHORT = 'ampr'
+
+BLEND_COLORS = 'blendColors'
+BLEND_COLORS_SHORT = 'bc'
+
+CHANNELS = 'channels'
+CHANNELS_SHORT = 'chnl'
+
+CHOICE = 'choice'
+CHOICE_SHORT = 'chce'
+
+CHOOSER = 'chooser'
+CHOOSER_SHORT = 'chsr'
+
+CLAMP = 'clamp'
+CLAMP_SHORT = 'clmp'
+
+COLOR_COMPOSITE = 'colorComposite'
+COLOR_COMPOSITE_SHORT = 'ccom'
+
+COLOR_CONDITION = 'colorCondition'
+COLOR_CONDITION_SHORT = 'ccnd'
+
+COLOR_CONSTANT = 'colorConstant'
+COLOR_CONSTANT_SHORT = 'ccnst'
+
+COLOR_CORRECT = 'colorCorrect'
+COLOR_CORRECT_SHORT = 'ccrt'
+
+COLOR_LOGIC = 'colorLogic'
+COLOR_LOGIC_SHORT = 'clog'
+
+COLOR_MASK = 'colorMask'
+COLOR_MASK_SHORT = 'cmsk'
+
+COLOR_MATH = 'colorMath'
+COLOR_MATH_SHORT = 'cmth'
+
+COLOR_PROFILE = 'colorProfile'
+COLOR_PROFILE_SHORT = 'cprf'
+
+COMPOSE_MATRIX = 'composeMatrix'
+COMPOSE_MATRIX_SHORT = 'cm'
+
+CONDITION = 'condition'
+CONDITION_SHORT = 'cnd'
+
+CONSTRAST = 'contrast'
+CONSTRAST_SHORT = 'cntrs'
+
+CURVE_INFO = 'curveInfo'
+CURVE_INFO_SHORT = 'crvi'
+
+DECOMPOSE_MATRIX = 'decomposeMatrix'
+DECOMPOSE_MATRIX_SHORT = 'dm'
+
+DISTANCE_BETWEEN = 'distanceBetween'
+DISTANCE_BETWEEN_SHORT = 'db'
+
+DOUBLE_SHADING_SWITCH = 'doubleShadingSwitch'
+DOUBLE_SHADING_SWITCH_SHORT = 'dss'
+
+EULER_TO_QUAT = 'eulerToQuat'
+EULER_TO_QUAT_SHORT = 'etq'
+
+FLOAT_COMPOSITE = 'floatComposite'
+FLOAT_COMPOSITE_SHORT = 'fcom'
+
+FLOAT_CONDITION = 'floatCondition'
+FLOAT_CONDITION_SHORT = 'fcnd'
+
+FLOAT_CONSTANT = 'floatConstant'
+FLOAT_CONSTANT_SHORT = 'fcnst'
+
+FLOAT_CORRECT = 'floatCorrect'
+FLOAT_CORRECT_SHORT = 'fcrt'
+
+FLOAT_LOGIC = 'floatLogic'
+FLOAT_LOGIC_SHORT = 'flog'
+
+FLOAT_MASK = 'floatMask'
+FLOAT_MASK_SHORT = 'fmsk'
+
+FLOAT_MATH = 'floatMath'
+FLOAT_MATH_SHORT = 'fmth'
+
+FOUR_BY_FOUR_MATRIX = 'fourByFourMatrix'
+FOUR_BY_FOUR_MATRIX_SHORT = 'fbfm'
+
+FRAME_CAGE = 'frameCache'
+FRAME_CAGE_SHORT = 'fc'
+
+GAMMA_CORRECT = 'gammaCorrect'
+GAMMA_CORRECT_SHORT = 'gc'
+
+HEIGHT_FEILD = 'heightField'
+HEIGHT_FEILD_SHORT = 'hf'
+
+HSV_TO_RGB = 'hsvToRgb'
+HSV_TO_RGB_SHORT = 'htr'
+
+INVERSE_MATRIX = 'inverseMatrix'
+INVERSE_MATRIX_SHORT = 'im'
+
+LIGHT_INFO = 'lightInfo'
+LIGHT_INFO_SHORT = 'li'
+
+LUMINANCE = 'luminance'
+LUMINANCE_SHORT = 'lum'
+
+MULT_DOUBLE_LINEAR = 'multDoubleLinear'
+MULT_DOUBLE_LINEAR_SHORT = 'mdl'
+
+MULT_MATRIX = 'multMatrix'
+MULT_MATRIX_SHORT = 'mm'
+
+MULTIPLY_DIVIDE = 'multiplyDivide'
+MULTIPLY_DIVIDE_SHORT = 'md'
+
+PARTIVLE_SAMPLER_INFO = 'particleSamplerInfo'
+PARTIVLE_SAMPLER_INFO_SHORT = 'psi'
+
+PLACE_2D_TEXTURE = 'place2dTexture'
+PLACE_2D_TEXTURE_SHORT = 'p2dt'
+
+PLACE_3D_TEXTURE = 'place3dTexture'
+PLACE_3D_TEXTURE_SHORT = 'p3dt'
+
+PLUS_MINUS_AVERAGE = 'plusMinusAverage'
+PLUS_MINUS_AVERAGE_SHORT = 'pma'
+
+PREMULTIPLY = 'premultiply'
+PREMULTIPLY_SHORT = 'pm'
+
+PROJECTION = 'projection'
+PROJECTION_SHORT = 'prj'
+
+QUAD_SHADING_SWITCH = 'quadShadingSwitch'
+QUAD_SHADING_SWITCH_SHORT = 'qss'
+
+QUAT_ADD = 'quatAdd'
+QUAT_ADD_SHORT = 'qa'
+
+QUAT_CONJUGATE = 'quatConjugate'
+QUAT_CONJUGATE_SHORT = 'qc'
+
+QUAT_INVERTE = 'quatInvert'
+QUAT_INVERTE_SHORT = 'qi'
+
+QUAT_NEGATE = 'quatNegate'
+QUAT_NEGATE_SHORT = 'qneg'
+
+QUAT_NORMALIZE = 'quatNormalize'
+QUAT_NORMALIZE_SHORT = 'qnrm'
+
+QUAT_PROD = 'quatProd'
+QUAT_PROD_SHORT = 'qp'
+
+QUAT_SUB = 'quatSub'
+QUAT_SUB_SHORT = 'qs'
+
+QUAT_TO_EULER = 'quatToEuler'
+QUAT_TO_EULER_SHORT = 'qte'
+
+REMAP_COLOR = 'remapColor'
+REMAP_COLOR_SHORT = 'rc'
+
+REMAP_HSV = 'remapHsv'
+REMAP_HSV_SHORT = 'rh'
+
+REMAP_VALUE = 'remapValue'
+REMAP_VALUE_SHORT = 'rv'
+
+REVERSE = 'reverse'
+REVERSE_SHORT = 'rev'
+
+RGB_TO_HSV = 'rgbToHsv'
+RGB_TO_HSV_SHORT = 'rth'
+
+SAMPLER_INFO = 'samplerInfo'
+SAMPLER_INFO_SHORT = 'si'
+
+SET_RANGE = 'setRange'
+SET_RANGE_SHORT = 'sr'
+
+SINGLE_SHADING_SWITCH = 'singleShadingSwitch'
+SINGLE_SHADING_SWITCH_SHORT = 'sss'
+
+STENCIL = 'stencil'
+STENCIL_SHORT = 'stc'
+
+SURFACE_INFO = 'surfaceInfo'
+SURFACE_INFO_SHORT = 'si'
+
+SURFACE_LUMINANCE = 'surfaceLuminance'
+SURFACE_LUMINANCE_SHORT = 'slum'
+
+TRANSPOSE_MATRIX = 'transposeMatrix'
+TRANSPOSE_MATRIX_SHORT = 'tm'
+
+TRIPLE_SHADING_SWITCH = 'tripleShadingSwitch'
+TRIPLE_SHADING_SWITCH_SHORT = 'tss'
+
+UNIT_CONVERSION = 'unitConversion'
+UNIT_CONVERSION_SHORT = 'uc'
+
+UNPREMULTIPLY = 'unpremultiply'
+UNPREMULTIPLY_SHORT = 'upm'
+
+UV_CHOOSER = 'uvChooser'
+UV_CHOOSER_SHORT = 'uvchsr'
+
+VECTOR_PRODUCT = 'vectorProduct'
+VECTOR_PRODUCT_SHORT = 'vp'
+
+WT_ADD_MATRIX = 'wtAddMatrix'
+WT_ADD_MATRIX_SHORT = 'wam'
+
+XGM_HAIR_MAPPING = 'xgmHairMapping'
+XGM_HAIR_MAPPING_SHORT = 'xhm'
+
+XGM_SE_EXPR = 'xgmSeExpr'
+XGM_SE_EXPR_SHORT = 'xse'
+
+
+TYPES = {
+    # Other
+    TRANSFORM : TRANSFORM_SHORT,
+    ZERO : ZERO_SHORT,
+    NULL : NULL_SHORT,
+    OFFSET : OFFSET_SHORT,
+    LOCATOR : LOCATOR_SHORT,
+    MESH : MESH_SHORT,
+    POLY_SPHERE : POLY_SPHERE_SHORT,
+    NURBS_CURVE : NURBS_CURVE_SHORT,
+    NURBS_SURFACE : NURBS_SURFACE_SHORT,
+    JOINT : JOINT_SHORT,
+    IK_EFFECTOR : IK_EFFECTOR_SHORT,
+    IK_HANDLE : IK_HANDLE_SHORT,
+    FOLLICLE : FOLLICLE_SHORT,
+    DISPLAY_LAYER : DISPLAY_LAYER_SHORT,
+    # Deform
+    BLENDSHAPE : BLENDSHAPE_SHORT,
+    CLUSTER : CLUSTER_SHORT,
+    CURVE_WRAP : CURVE_WRAP_SHORT,
+    DELTAMUSH : DELTAMUSH_SHORT,
+    LATTICE : LATTICE_SHORT,
+    SHRINK_WRAP : SHRINK_WRAP_SHORT,
+    SKIN_CLUSTER : SKIN_CLUSTER_SHORT,
+    TENSION : TENSION_SHORT,
+    WIRE : WIRE_SHORT,
+    WRAP : WRAP_SHORT,
+    # Surface
+    ANISOTROPIC : ANISOTROPIC_SHORT,
+    BIFROST_LIQUID_MATERIAL : BIFROST_LIQUID_MATERIAL_SHORT,
+    BLINN : BLINN_SHORT,
+    HAIR_PHYSICAL_SHADER : HAIR_PHYSICAL_SHADER_SHORT,
+    HAIR_TUBE_SHADER : HAIR_TUBE_SHADER_SHORT,
+    LAMBERT : LAMBERT_SHORT,
+    LAYERED_SHADER : LAYERED_SHADER_SHORT,
+    OCEAN_SHADER : OCEAN_SHADER_SHORT,
+    PHONG : PHONG_SHORT,
+    PHONG_E : PHONG_E_SHORT,
+    RAMP_SHADER : RAMP_SHADER_SHORT,
+    SHADING_MAP : SHADING_MAP_SHORT,
+    SURFACE_SHADER : SURFACE_SHADER_SHORT,
+    USE_BACKGROUND : USE_BACKGROUND_SHORT,
+    # Volumetric
+    ENV_FOG : ENV_FOG_SHORT,
+    FLUID_SHAPE : FLUID_SHAPE_SHORT,
+    LIGHT_FOG : LIGHT_FOG_SHORT,
+    PARTICLE_CLOUD : PARTICLE_CLOUD_SHORT,
+    VOLUME_FOG : VOLUME_FOG_SHORT,
+    VOLUME_SHADER : VOLUME_SHADER_SHORT,
+    # Displacement
+    C_MUSCLE_SHADER : C_MUSCLE_SHADER_SHORT,
+    DISPLACEMENT_SHADER : DISPLACEMENT_SHADER_SHORT,
+    # 2D_Textures
+    BULGE : BULGE_SHORT,
+    CHECKER : CHECKER_SHORT,
+    CLOTH : CLOTH_SHORT,
+    FILE : FILE_SHORT,
+    FLUID_TEXTURE_2D : FLUID_TEXTURE_2D_SHORT,
+    FRACTAL : FRACTAL_SHORT,
+    GRID : GRID_SHORT,
+    MANDELBROT : MANDELBROT_SHORT,
+    MONTAIN : MONTAIN_SHORT,
+    MOVIE : MOVIE_SHORT,
+    NOISE : NOISE_SHORT,
+    OCEAN : OCEAN_SHORT,
+    PSD_FILE_TEX : PSD_FILE_TEX_SHORT,
+    RAMP : RAMP_SHORT,
+    SIMPLEX_NOISE : SIMPLEX_NOISE_SHORT,
+    SUBSTANCE : SUBSTANCE_SHORT,
+    SUBSTANCE_OUTPUT : SUBSTANCE_OUTPUT_SHORT,
+    WATER : WATER_SHORT,
+    # 3D_Textures
+    BROWNIAN : BROWNIAN_SHORT,
+    CLOUD : CLOUD_SHORT,
+    CRATER : CRATER_SHORT,
+    FLUID_TEXTURE_3D : FLUID_TEXTURE_3D_SHORT,
+    GRANITE : GRANITE_SHORT,
+    LEATHER : LEATHER_SHORT,
+    MANDELBROT_3D : MANDELBROT_3D_SHORT,
+    MARBLE : MARBLE_SHORT,
+    ROCK : ROCK_SHORT,
+    SNOW : SNOW_SHORT,
+    SOLID_FRACTAL : SOLID_FRACTAL_SHORT,
+    STUCCO : STUCCO_SHORT,
+    VOLUME_NOISE : VOLUME_NOISE_SHORT,
+    WOOD : WOOD_SHORT,
+    # Env_Texture
+    ENV_BALL : ENV_BALL_SHORT,
+    ENV_CHROME : ENV_CHROME_SHORT,
+    ENV_CUBE : ENV_CUBE_SHORT,
+    ENV_SKY : ENV_SKY_SHORT,
+    ENV_SPHERE : ENV_SPHERE_SHORT,
+    # lights
+    EMBIENT_LIGHT : EMBIENT_LIGHT_SHORT,
+    AREA_LIGHT : AREA_LIGHT_SHORT,
+    DIRECTIONAL_LIGHT : DIRECTIONAL_LIGHT_SHORT,
+    POINT_LIGHT : POINT_LIGHT_SHORT,
+    SPOT_LIGHT : SPOT_LIGHT_SHORT,
+    VOLUME_LIGHT : VOLUME_LIGHT_SHORT,
+    # Utilities
+    ADD_DOUBLE_LINEAR : ADD_DOUBLE_LINEAR_SHORT,
+    ADD_MATRIX : ADD_MATRIX_SHORT,
+    BLENT_TWO_ATTR : BLENT_TWO_ATTR_SHORT,
+    BUMP_3D : BUMP_3D_SHORT,
+    BUMP_2D : BUMP_2D_SHORT,
+    ANGLE_BETWEEN : ANGLE_BETWEEN_SHORT,
+    ARRAY_MAPPER : ARRAY_MAPPER_SHORT,
+    BLEND_COLORS : BLEND_COLORS_SHORT,
+    CHANNELS : CHANNELS_SHORT,
+    CHOICE : CHOICE_SHORT,
+    CHOOSER : CHOOSER_SHORT,
+    CLAMP : CLAMP_SHORT,
+    COLOR_COMPOSITE : COLOR_COMPOSITE_SHORT,
+    COLOR_CONDITION : COLOR_CONDITION_SHORT,
+    COLOR_CONSTANT : COLOR_CONSTANT_SHORT,
+    COLOR_CORRECT : COLOR_CORRECT_SHORT,
+    COLOR_LOGIC : COLOR_LOGIC_SHORT,
+    COLOR_MASK : COLOR_MASK_SHORT,
+    COLOR_MATH : COLOR_MATH_SHORT,
+    COLOR_PROFILE : COLOR_PROFILE_SHORT,
+    COMPOSE_MATRIX : COMPOSE_MATRIX_SHORT,
+    CONDITION : CONDITION_SHORT,
+    CONSTRAST : CONSTRAST_SHORT,
+    CURVE_INFO : CURVE_INFO_SHORT,
+    DECOMPOSE_MATRIX : DECOMPOSE_MATRIX_SHORT,
+    DISTANCE_BETWEEN : DISTANCE_BETWEEN_SHORT,
+    DOUBLE_SHADING_SWITCH : DOUBLE_SHADING_SWITCH_SHORT,
+    EULER_TO_QUAT : EULER_TO_QUAT_SHORT,
+    FLOAT_COMPOSITE : FLOAT_COMPOSITE_SHORT,
+    FLOAT_CONDITION : FLOAT_CONDITION_SHORT,
+    FLOAT_CONSTANT : FLOAT_CONSTANT_SHORT,
+    FLOAT_CORRECT : FLOAT_CORRECT_SHORT,
+    FLOAT_LOGIC : FLOAT_LOGIC_SHORT,
+    FLOAT_MASK : FLOAT_MASK_SHORT,
+    FLOAT_MATH : FLOAT_MATH_SHORT,
+    FOUR_BY_FOUR_MATRIX : FOUR_BY_FOUR_MATRIX_SHORT,
+    FRAME_CAGE : FRAME_CAGE_SHORT,
+    GAMMA_CORRECT : GAMMA_CORRECT_SHORT,
+    HEIGHT_FEILD : HEIGHT_FEILD_SHORT,
+    HSV_TO_RGB : HSV_TO_RGB_SHORT,
+    INVERSE_MATRIX : INVERSE_MATRIX_SHORT,
+    LIGHT_INFO : LIGHT_INFO_SHORT,
+    LUMINANCE : LUMINANCE_SHORT,
+    MULT_DOUBLE_LINEAR : MULT_DOUBLE_LINEAR_SHORT,
+    MULT_MATRIX : MULT_MATRIX_SHORT,
+    MULTIPLY_DIVIDE : MULTIPLY_DIVIDE_SHORT,
+    PARTIVLE_SAMPLER_INFO : PARTIVLE_SAMPLER_INFO_SHORT,
+    PLACE_2D_TEXTURE : PLACE_2D_TEXTURE_SHORT,
+    PLACE_3D_TEXTURE : PLACE_3D_TEXTURE_SHORT,
+    PLUS_MINUS_AVERAGE : PLUS_MINUS_AVERAGE_SHORT,
+    PREMULTIPLY : PREMULTIPLY_SHORT,
+    PROJECTION : PROJECTION_SHORT,
+    QUAD_SHADING_SWITCH : QUAD_SHADING_SWITCH_SHORT,
+    QUAT_ADD : QUAT_ADD_SHORT,
+    QUAT_CONJUGATE : QUAT_CONJUGATE_SHORT,
+    QUAT_INVERTE : QUAT_INVERTE_SHORT,
+    QUAT_NEGATE : QUAT_NEGATE_SHORT,
+    QUAT_NORMALIZE : QUAT_NORMALIZE_SHORT,
+    QUAT_PROD : QUAT_PROD_SHORT,
+    QUAT_SUB : QUAT_SUB_SHORT,
+    QUAT_TO_EULER : QUAT_TO_EULER_SHORT,
+    REMAP_COLOR : REMAP_COLOR_SHORT,
+    REMAP_HSV : REMAP_HSV_SHORT,
+    REMAP_VALUE : REMAP_VALUE_SHORT,
+    REVERSE : REVERSE_SHORT,
+    RGB_TO_HSV : RGB_TO_HSV_SHORT,
+    SAMPLER_INFO : SAMPLER_INFO_SHORT,
+    SET_RANGE : SET_RANGE_SHORT,
+    SINGLE_SHADING_SWITCH : SINGLE_SHADING_SWITCH_SHORT,
+    STENCIL : STENCIL_SHORT,
+    SURFACE_INFO : SURFACE_INFO_SHORT,
+    SURFACE_LUMINANCE : SURFACE_LUMINANCE_SHORT,
+    TRANSPOSE_MATRIX : TRANSPOSE_MATRIX_SHORT,
+    TRIPLE_SHADING_SWITCH : TRIPLE_SHADING_SWITCH_SHORT,
+    UNIT_CONVERSION : UNIT_CONVERSION_SHORT,
+    UNPREMULTIPLY : UNPREMULTIPLY_SHORT,
+    UV_CHOOSER : UV_CHOOSER_SHORT,
+    VECTOR_PRODUCT : VECTOR_PRODUCT_SHORT,
+    WT_ADD_MATRIX : WT_ADD_MATRIX_SHORT,
+    XGM_HAIR_MAPPING : XGM_HAIR_MAPPING_SHORT,
+    XGM_SE_EXPR : XGM_SE_EXPR_SHORT,
+}
+
+TYPES_SHORT = /
+    dict( (shortName, longName) for longName, shortName in TYPES.iteritems() )
