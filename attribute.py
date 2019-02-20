@@ -1,8 +1,7 @@
 # Maya libraries
 import maya.cmds as mc
 import pymel.core as pm
-import pymel.core.datatypes as dt
-import maya.api.nodeOpenMaya as om
+import maya.api.OpenMaya as om
 
 
 def getInChannelbox(node):
