@@ -4,52 +4,46 @@ import pymel.core as pm
 import maya.api.OpenMaya as om
 
 
-def getInChannelbox(node):
-    """Returns the attribute(s) in the channelbox for the given node.
+def iterChannelbox(nodes, ignores=tuple()):
+    """Yield channelbox attribute(s) of the given nodes.
 
-    Iterate into the attribute list of the given node and return only the
-    attribute(s) and return only the attribute who are either keyable and not locked
-    OR channelboxed.
+    :param nodes: Maya's node(s) name in a list.
+    :type nodes: list or tuple or set
 
-    :param node: Node name or a PyNode node.
-    :type node: str or PyNode
+    :param ignores: Node's attribute(s) name in a list to ignore during the process,
+        defaults to tuple()
+    :type ignores: list or tuple or set, optional
 
-    :returns: Attribute(s) in the channelbox
-    :rtype: list(pymel.core.general.Attribute)
+    :returns: Pymel's attribute object
+    :rtype: {pymel.core.general.Attribute}
     """
-    node = pm.PyNode(node) if isinstance(node, basestring) else node
+    for node in nodes:
+        node = pm.PyNode(node) if isinstance(node, basestring) else node
 
-    inChannelbox = []
-    for attr in node.listAttr():
+        for attr in node.listAttr():
+            attr_is_keyable_and_unlocked = attr.isKeyable() and (not attr.isLocked())
+            attr_is_in_channelbox = attr.isInChannelBox()
 
-        attr_is_keyable_and_unlocked = attr.isKeyable() and (not attr.isLocked())
-        attr_is_in_channelbox = attr.isInChannelBox()
-
-        if attr_is_keyable_and_unlocked or attr_is_in_channelbox:
-            inChannelbox.append(attr)
-
-    return inChannelbox
-
-
-def defaultChannelBox(nodes, ignores=tuple()):
-    """[summary]
-
-    [description]
-    :param nodes: [description]
-    :type nodes: [type]
-    :param ignores: [description], defaults to []
-    :type ignores: list, optional
-    """
-
-    def channelbox_attribute_iterator(nodes, ignores):
-        for node in nodes:
-            for attr in getInChannelbox(node):
+            if attr_is_keyable_and_unlocked or attr_is_in_channelbox:
                 short_name_in_ignores = attr.shortName() in ignores
                 long_name_in_ignores = attr.longName() in ignores
+
                 if not (short_name_in_ignores or long_name_in_ignores):
                     yield attr
 
-    for attr in channelbox_attribute_iterator(nodes, ignores):
+
+def defaultChannelbox(nodes, ignores=tuple()):
+    """Set the values of the channelbox attributes to there default if there is.
+
+    :param nodes: Maya's node(s) name in a list.
+    :type nodes: list or tuple or set
+
+    :param ignores: Node's attribute(s) name in a list to ignore during the process,
+        defaults to tuple()
+    :type ignores: list or tuple or set, optional
+    """
+
+    for attr in iterChannelbox(nodes, ignores):
         if attr.attrName() in ('tx', 'ty', 'tz', 'rx', 'ry', 'rz'):
             defaultValue = 0
         elif attr.attrName() in ('sx', 'sy', 'sz', 'v'):
@@ -61,65 +55,35 @@ def defaultChannelBox(nodes, ignores=tuple()):
             attr.set(defaultValue)
 
 
-def connectChannelBox(source, destinations, ignores=[]):
+def connectChannelbox(source, destinations, ignores=tuple()):
+    """Connect the source channelbox's attribute(s) to the destination(s)
+    channelbox's attribute(s).
 
-    destinations = [destinations] if isinstance(destinations, basestring) else destinations
-    ignores = [ignores] if isinstance(ignores, basestring) else ignores
+    :param source: Maya's node name.
+        Connects to the given destination Maya's node(s).
+    :type source: str or PyNode
 
-    source = pm.PyNode(source)
-    destinations = pm.PyNode(destinations)
-    connectionDict = {}
+    :param destinations: Maya's node name(s) in a list.
+        Receive the connection from the given source Maya's node.
+    :type destinations: [type]
 
-    for destination in destinations:
-        for attr in getInChannelbox(destination):
-
-            short_name_in_ignores = (attr.shortName() in ignores)
-            long_name_in_ignores = (attr.longName() in ignores)
-
-            if not (short_name_in_ignores or long_name_in_ignores):
-                sourceAttr = source.attr(attr.shortName())
-                toConnect = connectionDict.setdefault(sourceAttr, [])
-                toConnect.append(attr)
-
-    for sourceAttr, destinationAttrs in connectionDict.items():
-        for destinationAttr in destinationAttrs:
-            try:
-                sourceAttr >> destinationAttr
-            except:
-                wrngMsg = 'Can\'t connect {0} to {1}.'
-                pm.warning(wrngMsg.format(destinationAttr.name(), sourceAttr.name()))
-
-
-def connectChannelBox_OLD(source, destinations, ignores=[]):
-    """Connect the shared keyable attributes from the source to the destination(s).
-
-    :param source: Object who will be the source of the connection(s).
-    :type source: str
-
-    :param destinations: Object(s) who will be the destination of the connection(s).
-    :type destinations: str or list
-
-    :param ignores: Defaults to []
-        Attribute(s) to ignore during the connection process.
-    :type ignores: str or list, optional
+    :param ignores: Node's attribute(s) name in a list to ignore during the process,
+        defaults to tuple()
+    :type ignores: list or tuple or set, optional
     """
+    source = pm.PyNode(source)
+    iterDestinations = (pm.PyNode(destination) for destination in destinations)
 
-    if isinstance(destinations, basestring):
-        destinations = [destinations]
-    ignores = [ignores] if isinstance(ignores, basestring) else ignores
-
-    lnSnAttrs = zip(mc.listAttr(source, k=1), mc.listAttr(source, k=1, sn=1))
-    for destination in destinations:
-        for lnAttr, snAttr in lnSnAttrs:
-            if not ((lnAttr in ignores) or (snAttr in ignores)):
-                try:
-                    mc.connectAttr(source+'.'+lnAttr, destination+'.'+lnAttr)
-                except:
-                    wrngMsg = 'Can\'t connect {1}.{0} to {2}.{0}.'
-                    mc.warning(wrngMsg.format(lnAttr, source, destination))
+    for destinationAttr in iterChannelbox(iterDestinations, ignores):
+        try:
+            sourceAttr = source.attr(destinationAttr.shortName())
+            sourceAttr >> destinationAttr
+        except:
+            wrngMsg = "Can't connect {0} to {1}."
+            pm.warning(wrngMsg.format(sourceAttr.name(), destinationAttr.name()))
 
 
-def disconnectChannelBox(nodes, ignores=[]):
+def disconnectChannelbox(nodes, ignores=tuple()):
     """Disconnect the keyable attributes of the given node(s).
 
     :param nodes: Node(s) to disconnect the attribute(s) from.
@@ -129,21 +93,14 @@ def disconnectChannelBox(nodes, ignores=[]):
         Attribute(s) to ignore during the disconnection process.
     :type ignores: str or list, optional
     """
-
-    nodes = [nodes] if isinstance(nodes, basestring) else nodes
-    ignores = [ignores] if isinstance(ignores, basestring) else ignores
-
-    for node in nodes:
-        lnSnAttrs = zip(mc.listAttr(node, k=1), mc.listAttr(node, k=1, sn=1))
-        for lnAttr, snAttr in lnSnAttrs:
-            if not ((lnAttr in ignores) or (snAttr in ignores)):
-                conn = mc.listConnections(node+'.'+lnAttr, d=0, s=1, p=1)
-                conn = (conn or [None])[0]
-                if conn:
-                    mc.disconnectAttr(conn, node+'.'+lnAttr)
+    for destinationAttr in iterChannelbox(nodes, ignores):
+        sourceAttr = destinationAttr.listConnections(source=True, plugs=True)
+        sourceAttr = (sourceAttr or [None])[0]
+        if sourceAttr:
+             destinationAttr // sourceAttr
 
 
-def lockChannelBox(nodes, ignores=[]):
+def lockChannelbox(nodes, ignores=[]):
     """Lock the keyable attribute(s) on the given node(s).
 
     :param nodes: Node(s) to lock the keyable attribute(s) on.
@@ -171,7 +128,7 @@ def lockChannelBox(nodes, ignores=[]):
                 mc.setAttr(node+'.'+lnAttr.split('.')[0], lock=True)
 
 
-def unlockChannelBox(nodes, ignores=[]):
+def unlockChannelbox(nodes, ignores=[]):
     """Unlock the keyable attribute(s) on the given node(s).
 
     :param nodes: Node(s) to unlock the keyable attribute(s) on.
