@@ -7,6 +7,10 @@ import maya.cmds as mc
 # RigIO libraries
 from constants import FORMAT, TAGS, TAG_NUM, SIDES, EXCEPTIONS, TYPES
 
+__all__ = [
+    'AbstractNameConvention',
+    'NameConvention',
+]
 
 class AbstractNameConvention(object):
 
